@@ -115,3 +115,33 @@ class CreateReviewView(generics.CreateAPIView):
 
         # If all shields hold, save the review
         serializer.save(booking=booking, reviewer=self.request.user)
+
+class MockPaymentVerificationView(APIView):
+    permission_classes = [IsAuthenticated, IsSeeker]
+
+    def post(self, request, transaction_id):
+        try:
+            transaction = Transaction.objects.get(
+                id=transaction_id, 
+                booking__seeker__user=self.request.user
+            )
+        except Transaction.DoesNotExist:
+            return Response({"error": "Transaction not found or unauthorized."}, status=status.HTTP_404_NOT_FOUND)
+
+        if transaction.status == Transaction.StatusChoices.SUCCESS:
+            return Response({"message": "This transaction is already paid."}, status=status.HTTP_400_BAD_REQUEST)
+
+        mock_payment_id = f"pay_mock_{transaction.id}89X"
+        mock_signature = "mock_valid_signature_string"
+
+        transaction.gateway_payment_id = mock_payment_id
+        transaction.gateway_signature = mock_signature
+        transaction.status = Transaction.StatusChoices.SUCCESS
+        transaction.save()
+
+        return Response({
+            "message": "Payment verified successfully.",
+            "transaction_id": transaction.id,
+            "status": transaction.status,
+            "gateway_payment_id": transaction.gateway_payment_id
+        }, status=status.HTTP_200_OK)        

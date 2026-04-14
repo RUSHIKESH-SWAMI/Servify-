@@ -20,3 +20,19 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             Provider.objects.create(user=user)
             
         return user
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'role', 'phone_number', 'location']
+        read_only_fields = ['id', 'username', 'email', 'role']    #making these read-only so a Seeker can't hack the API to become an Admin.
+        
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)

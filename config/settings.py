@@ -36,15 +36,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
     # Third-party
     'rest_framework',
-    
-    # Local Apps
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    # Local apps
     'accounts',
     'services',
     'bookings',
-]
+] 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'servify_db',      # Name of your local database
-        'USER': 'postgres',        # Your postgres username
-        'PASSWORD': '1234r',    # Your postgres password
+        'NAME': 'servify_db',      
+        'USER': 'postgres',        
+        'PASSWORD': '1234r',    
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -137,3 +137,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+# Mocks email sending by printing it to the console during local development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

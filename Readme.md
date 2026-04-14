@@ -38,7 +38,7 @@ The code is split into three main "apps" (folders) to keep everything organized:
 ---
 
 ## 🚀 The API Endpoints (What we built so far)
-Here are the 11 URLs that power the application:
+Below are the 11 URLs that power the application:
 
 **1. Creating Accounts & Logging In**
 * `POST /api/accounts/register/` - Create a new Seeker or Provider.
