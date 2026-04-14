@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'servify_db',      
         'USER': 'postgres',        
-        'PASSWORD': '1234r',    
+        'PASSWORD': '12345',    
         'HOST': 'localhost',
         'PORT': '5432',
     }

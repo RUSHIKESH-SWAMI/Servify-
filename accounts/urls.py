@@ -10,9 +10,12 @@ urlpatterns = [
     
     #Logout & Profile
     path('logout/', LogoutView.as_view(), name='logout'), 
-    path('profile/', UserProfileView.as_view(), name='profile'), 
+    path('profile/', UserProfileView.as_view(), name='profile'),
+    path('update-profile/', UserProfileView.as_view(), name='profile_update'), # Same view, but we can use it for updates too
 
     #Password Reset
     path('password-reset-request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
     path('password-reset-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+
+
 ]

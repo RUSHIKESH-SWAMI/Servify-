@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 from .models import User
 from .serializers import UserRegistrationSerializer, UserProfileSerializer
 
@@ -11,6 +12,9 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from .models import PasswordResetOTP
 from .serializers import PasswordResetRequestSerializer, PasswordResetConfirmSerializer
+
+from django.utils import timezone
+
 
 
 # -- 1. Registration View --
