@@ -1,0 +1,102 @@
+================================================================
+SERVIFY - DOCKER & NGINX SETUP SUMMARY
+================================================================
+
+WHAT WAS ADDED
+================================================================
+
+1. servify-accounts/Dockerfile
+   - Base image: python:3.12-slim
+   - Installs requirements.txt
+   - Runs Django on port 8001
+
+2. servify-services/Dockerfile
+   - Base image: python:3.12-slim
+   - Installs requirements.txt
+   - Runs Django on port 8002
+
+3. servify-bookings/Dockerfile
+   - Base image: python:3.12-slim
+   - Installs requirements.txt
+   - Runs Django on port 8003
+
+4. nginx/nginx.conf
+   - Listens on port 80
+   - Routes /api/accounts/ → servify-accounts:8001
+   - Routes /api/services/ → servify-services:8002
+   - Routes /api/bookings/ → servify-bookings:8003
+
+5. docker-compose.yml
+   - accounts-db   → Postgres for accounts service
+   - services-db   → Postgres for services service
+   - bookings-db   → Postgres for bookings service
+   - servify-accounts → Django app (depends on accounts-db)
+   - servify-services → Django app (depends on services-db)
+   - servify-bookings → Django app (depends on bookings-db + servify-accounts)
+   - nginx          → API Gateway (depends on all 3 Django services)
+   - Runs migrations automatically on startup
+   - Only port 80 (Nginx) is exposed to the outside
+
+
+WHAT WAS MODIFIED
+================================================================
+
+1. servify-accounts/config/settings.py
+   - ALLOWED_HOSTS: [] → ['*']
+   - DB HOST: 'localhost' → 'accounts-db'
+
+2. servify-services/config/settings.py
+   - ALLOWED_HOSTS: [] → ['*']
+   - DB HOST: 'localhost' → 'services-db'
+
+3. servify-bookings/config/settings.py
+   - ALLOWED_HOSTS: [] → ['*']
+   - DB HOST: 'localhost' → 'bookings-db'
+   - IDENTITY_SERVICE_URL: 'http://127.0.0.1:8001' → 'http://servify-accounts:8001'
+
+
+ARCHITECTURE
+================================================================
+
+   Client
+     ↓
+   Nginx :80  (API Gateway)
+     ├── /api/accounts/*  → servify-accounts:8001 → accounts-db
+     ├── /api/services/*  → servify-services:8002 → services-db
+     └── /api/bookings/*  → servify-bookings:8003 → bookings-db
+
+
+FILE STRUCTURE
+================================================================
+
+servify/
+├── docker-compose.yml
+├── nginx/
+│   └── nginx.conf
+├── servify-accounts/
+│   └── Dockerfile
+├── servify-services/
+│   └── Dockerfile
+└── servify-bookings/
+    └── Dockerfile
+
+
+HOW TO RUN
+================================================================
+
+  cd /home/rushikesh/modern_web_architecture/servify
+  docker-compose up --build
+
+  All APIs accessible at http://localhost/api/...
+
+
+USEFUL COMMANDS
+================================================================
+
+  docker-compose up --build       → First time / after code changes
+  docker-compose up               → Start without rebuilding
+  docker-compose down             → Stop all containers
+  docker-compose down -v          → Stop + delete all DB data
+  docker-compose logs -f <name>   → Watch logs for a specific service
+
+================================================================

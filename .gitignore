@@ -1,22 +1,16 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 
-# Virtual Environment
+# Environments & Secrets
 venv/
-
-# Django
-db.sqlite3
-*.log
-media/
-
-# Environment variables
+env/
 .env
 
-# VS Code
-.vscode/
-
-# Mac/Linux
+# OS generated files
 .DS_Store
+Thumbs.db
+
+# Database (Since we use Docker Postgres)
+*.sqlite3
